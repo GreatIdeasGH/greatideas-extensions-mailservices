@@ -10,8 +10,8 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>Microsoft-Graph; Email; GreatIdeas; MailServices</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageProjectUrl>https://github.com/GreatIdeasGH/GreatIdeasExtensions</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/GreatIdeasGH/GreatIdeasExtensions/tree/master/src/GreatIdeas.MailServices.MsGraph</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/GreatIdeasGH/greatideas-extensions-mailservices</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/GreatIdeasGH/greatideas-extensions-mailservices/tree/master/GreatIdeas.MailServices.MsGraph</RepositoryUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
