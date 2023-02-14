@@ -1,4 +1,4 @@
-﻿namespace GreatIdeas.MailServices;
+﻿namespace GreatIdeas.MailServices.MsGraph;
 
 public record AzureAdOptions()
 {
