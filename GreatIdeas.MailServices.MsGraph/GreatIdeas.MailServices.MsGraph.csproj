@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>1.0.0</Version>
+		<Description>Email services using Microsoft Graph API </Description>
+		<Authors>Gerald Maale</Authors>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageTags>Microsoft-Graph; Email; GreatIdeas; MailServices</PackageTags>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/GreatIdeasGH/GreatIdeasExtensions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/GreatIdeasGH/GreatIdeasExtensions/tree/master/src/GreatIdeas.MailServices.MsGraph</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Graph" Version="4.53.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph">
+			<Version>1.26.0</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph">
+			<Version>1.26.0</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GreatIdeas.MailServices\GreatIdeas.MailServices.csproj" />
+	</ItemGroup>
+
+</Project>
