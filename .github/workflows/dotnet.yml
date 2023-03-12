@@ -1,16 +1,16 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET
-
+env: 
+  SDK_VERSION: 1.0.2
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+    
 jobs:
-  build:
+  compile:
     strategy:
       max-parallel: 2
       matrix:
@@ -32,12 +32,28 @@ jobs:
       
     - name: Test
       run: dotnet test --no-build --verbosity normal
+  
+  calc-version:
+    name: Calculate Version
+    runs-on: ubuntu-latest
+    needs:
+      - compile
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - id: v
+        run: |
+          if [ "${{ github.ref }}" = 'refs/heads/master' ]; then
+            echo "version=${SDK_VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${SDK_VERSION}-develop.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          fi
 
   publish:
     name: Build and Publish NuGets
     runs-on: windows-latest
     needs:
-      - calc-version
+      - calc-version    
 
     steps:
     - name: Version Output Check
@@ -59,12 +75,4 @@ jobs:
         version: ${{ needs.calc-version.outputs.version }}
         tag-commit: false
         nuget-key: ${{secrets.NUGET_API_KEY}}
-
-    #   run: dotnet restore
-    # - name: Build
-    #   run: dotnet build --no-restore
-    # - name: Test
-    #   run: dotnet test --no-build --verbosity normal
-    # - name: Publish NuGet
-    #   run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
