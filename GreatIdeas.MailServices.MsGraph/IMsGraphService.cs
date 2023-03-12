@@ -1,4 +1,6 @@
-﻿namespace GreatIdeas.MailServices.MsGraph;
+﻿using Microsoft.Graph;
+
+namespace GreatIdeas.MailServices.MsGraph;
 
 public interface IMsGraphService
 {
@@ -16,4 +18,5 @@ public interface IMsGraphService
     /// <param name="fileToAttach"></param>
     /// <returns><see cref="string"/> for success or failure</returns>
     Task<bool> SendEmailWithAttachmentAsync(EmailModel emailModel, FileToAttach fileToAttach);
+    
 }

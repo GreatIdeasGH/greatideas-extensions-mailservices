@@ -6,12 +6,10 @@ namespace GreatIdeas.MailServices.MsGraph;
 
 public class MsGraphService : IMsGraphService
 {
-    private readonly IOptionsMonitor<AzureAdOptions> _optionsMonitor;
     private readonly AzureAdOptions _azureAdOptions;
 
     public MsGraphService(IOptionsMonitor<AzureAdOptions> optionsMonitor)
     {
-        _optionsMonitor = optionsMonitor;
         _azureAdOptions = optionsMonitor.CurrentValue;
     }
 
@@ -29,10 +27,10 @@ public class MsGraphService : IMsGraphService
             {
                 AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
             };
-
+            
             var clientSecretCredential = new ClientSecretCredential(
                 _azureAdOptions.TenantId, _azureAdOptions.ClientId, _azureAdOptions.ClientSecret, options);
-
+            
             var graphClient = new GraphServiceClient(clientSecretCredential);
 
             // Define a simple e-mail message.
@@ -49,13 +47,13 @@ public class MsGraphService : IMsGraphService
                     new Recipient {EmailAddress = new EmailAddress {Address = emailModel.To}}
                 },
             };
-
+            
             // Send mail as the given user. 
             await graphClient
-                 .Users[_azureAdOptions.UserObjectId]
-                 .SendMail(message, true)
-                 .Request()
-                 .PostAsync();
+                .Users[_azureAdOptions.UserObjectId]
+                .SendMail(message, true)
+                .Request()
+                .PostAsync();
 
             return true;
         }
@@ -75,8 +73,6 @@ public class MsGraphService : IMsGraphService
     {
         try
         {
-            var scopes = new string[] { "https://graph.microsoft.com/.default" };
-
             // Client Secret Credential
             var options = new TokenCredentialOptions
             {
@@ -85,7 +81,7 @@ public class MsGraphService : IMsGraphService
 
             var clientSecretCredential = new ClientSecretCredential(
                 _azureAdOptions.TenantId, _azureAdOptions.ClientId, _azureAdOptions.ClientSecret, options);
-            var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+            var graphClient = new GraphServiceClient(clientSecretCredential);
 
             // Message
             var message = new Message
@@ -119,6 +115,7 @@ public class MsGraphService : IMsGraphService
                 throw new Exception("File size is greater than 4MB");
             }
 
+            // Send mail as the given user.
             await graphClient
                 .Users[_azureAdOptions.UserObjectId]
                 .SendMail(message, true)

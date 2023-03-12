@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
 
 namespace GreatIdeas.MailServices.MsGraph;
 
-public static class MailServiceCollection
+public static class DependencyInjection
 {
     /// <summary>
     /// Add DI for <see cref="MsGraphService"/> with configuration
@@ -21,9 +23,11 @@ public static class MailServiceCollection
         services.AddTransient<IMsGraphService, MsGraphService>();
 
         // Register Microsoft Graph
-        services.AddMicrosoftIdentityWebApiAuthentication(configuration)
+        services
+            .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureAd"))
             .EnableTokenAcquisitionToCallDownstreamApi()
-            .AddMicrosoftGraph(configuration.GetSection("DownstreamApi"))
+            .AddMicrosoftGraph(configuration.GetSection("Graph"))
             .AddInMemoryTokenCaches();
 
         return services;
