@@ -11,8 +11,11 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        os: ['ubuntu-latest', 'windows-latest']
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
@@ -20,9 +23,48 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --no-restore
+      
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+  publish:
+    name: Build and Publish NuGets
+    runs-on: windows-latest
+    needs:
+      - calc-version
+
+    steps:
+    - name: Version Output Check
+      run: |
+        echo "${{ needs.calc-version.outputs.version }}"
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Publish Nuget
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: GreatIdeas.MailServices.MsGraph/GreatIdeas.MailServices.MsGraph.csproj
+        version: ${{ needs.calc-version.outputs.version }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}
+
+    #   run: dotnet restore
+    # - name: Build
+    #   run: dotnet build --no-restore
+    # - name: Test
+    #   run: dotnet test --no-build --verbosity normal
+    # - name: Publish NuGet
+    #   run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+
