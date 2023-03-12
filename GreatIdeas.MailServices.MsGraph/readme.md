@@ -20,7 +20,10 @@ NB: The `UserObjectId` is the `Object Id` of the user in Azure AD. This can be f
     "TenantId": "",
     "UserObjectId": ""
   },
-  "AllowedHosts": "*"
+  "Graph": {
+    "BaseUrl": "https://graph.microsoft.com/v1.0",
+    "Scopes": "user.read"
+  }
 }
 ```
 
